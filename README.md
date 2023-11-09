@@ -1,6 +1,6 @@
 # Netflix Flask App
 
-This project is used to upload movie files to Google and obtain upload results. This load can be multiple or simple. The data can be fully recovered or paged. This can be done from a python script or invoked as a Rest API.
+This project is used to upload movie files to Google and obtain upload results. This upload can be multiple or simple. The data can be fully recovered or paged. This can be done from a python script or invoked as a Rest API.
 
 ## Content
 
