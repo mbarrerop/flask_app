@@ -6,12 +6,14 @@ def create_app():
     
     from src.admin.resources import blueprint as bp_admin
     from src.movies.resources import blueprint as bp_movies
+    from src.core.resources import blueprint as bp_hc
     
     app = Flask(__name__)
     app.url_map.strict_slashes = False
     
     app.register_blueprint(bp_admin)
     app.register_blueprint(bp_movies)
+    app.register_blueprint(bp_hc)
     
     register_error_handlers(app)
     

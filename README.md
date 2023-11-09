@@ -86,6 +86,7 @@ otherwise follow the instructions on the official pip page: https://pip.pypa.io/
     ```
     ```bash
     # Once you have building your application image, you can deploy it using Docker.
+    docker run -p 5000:5000  --health-cmd="curl -f http://localhost:5000/state/healthcheck || exit 1" --health-interval=30s -d
     docker run -d -p 5000:5000 flask-app
     ```
 
@@ -126,6 +127,8 @@ otherwise follow the instructions on the official pip page: https://pip.pypa.io/
    # Script to save a data obtained from the enpoint. You must set --save_file as True and a correct path from you local system
    python3 script.py --url_get_file  http://127.0.0.1:5000/movies/list?file_name=netflix_titles_1.csv --save_file True --save_path /home/miguel
    ```
+
+5. If you want call this project from Postman, sure It's ready for you.
 
 ## License
 

@@ -2,7 +2,6 @@
 # Flask API
 from flask_restful import Resource
 from flask import request, jsonify
-from marshmallow import ValidationError
 
 # Exceptions
 from src.core.exceptions import UploadFile 

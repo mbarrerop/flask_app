@@ -13,6 +13,10 @@ COPY . .
 # Installation requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY /healthcheck.sh /healthcheck.sh
+RUN sed -i 's/\r$//g' /healthcheck.sh
+RUN chmod +x /healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -f http://0.0.0.0:5000/state/healthcheck || exit 1
 # Port expose
 EXPOSE 5000
 
