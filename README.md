@@ -16,7 +16,7 @@ This project is used to upload movie files to Google and obtain upload results. 
 - Python 3.10 https://www.python.org/downloads/release/python-31011/
 - All libraries in requirements.txt
 
-## Instalation
+## Installation
 
 1. Clone or download this repository.
 
