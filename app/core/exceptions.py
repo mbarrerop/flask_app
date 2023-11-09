@@ -86,3 +86,9 @@ class FileNotExist(AbstracException):
     code_type = "#08"
     date_time =  datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     detail = ("File not found")
+    
+class InvalidFileName(AbstracException):
+    status_code = 400
+    code_type = "#09"
+    date_time =  datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    detail = ("Invalid file name")

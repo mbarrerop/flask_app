@@ -7,7 +7,7 @@ from marshmallow import ValidationError
 from app.admin.schemas import UploadMoviesSchema
 
 # Exceptions
-from app.core.exceptions import AppErrorBaseClass, UploadFile, FileNotExist
+from app.core.exceptions import UploadFile, FileNotExist, InvalidFileName
 
 # External services
 from app.core.google_api import GoogleStorage
@@ -16,26 +16,51 @@ from app.core.google_api import GoogleStorage
 from app.core.utils import val_existing_file
 
 class AdminMoviesList(Resource):
-    
+    """
+    A class representing a RESTful resource for managing movie files.
+
+    Attributes:
+        None
+
+    Methods:
+        post(): Handles the HTTP POST request to save a Netflix titles file to Google Cloud Storage.
+
+    Example usage:
+        resource = AdminMoviesList()
+    """
+
     def post(self):
+        """
+        Handles the HTTP POST request to save a Netflix titles file to Google Cloud Storage.
+
+        This method manages the uploaded file, verifies its validity, and saves it to Google Cloud Storage.
+
+        Returns:
+            flask.Response: A Flask response with a JSON object containing the result. If the upload is successful,
+                            the status_code is 200.
+
+        Raises:
+            UploadFile: When the request does not contain files.
+            InvalidFileName: When the uploaded file has an invalid name.
+            UploadFile: When there are failures while updating the netflix_titles.csv file in Google Cloud Storage.
+        """
         
+        # Manage the file and events
         upload_file = None
-        upload_schema = UploadMoviesSchema()
+        if 'file' not in request.files:
+            raise UploadFile()
         
-        data = request.get_json()
-        movie_body = upload_schema.load(data)
+        file = request.files['file']
         
-        if not movie_body:
-            raise ValidationError()
+        if file.filename == '':
+            raise InvalidFileName()
         
-        f_path = movie_body.get('path')
-        f_exists, f_name = val_existing_file(f_path)
+        if file:
+            file_data = file.read()
         
-        if not f_exists and not f_name:
-            raise FileNotExist()
-        
+        # Sending to Google Storage
         glg = GoogleStorage()
-        upload_file = glg._upload_files(f_name, f_path)
+        upload_file = glg._upload_files(file.filename, file_data)
         
         if not upload_file:
             raise UploadFile()

@@ -7,5 +7,4 @@ blueprint = Blueprint('movies', __name__, url_prefix='/movies')
 
 api = Api(blueprint)
 
-
 api.add_resource(MoviesList, '/list', endpoint='movies_list')
