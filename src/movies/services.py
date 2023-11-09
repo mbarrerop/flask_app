@@ -18,7 +18,7 @@ import io
 
 class MoviesList(Resource):
     """
-    A class representing a RESTful resource for listing movies.
+    A class representing a RESTful resource for retrieving a list of movies.
 
     Attributes:
         None
@@ -34,25 +34,45 @@ class MoviesList(Resource):
         """
         Handles the HTTP GET request to retrieve a list of movies.
 
-        This method fetches a CSV file from Google Cloud Storage, reads it into a Pandas DataFrame,
-        and converts the DataFrame to a JSON response.
+        This method fetches movie data from a specified file, performs optional pagination,
+        and returns the data as JSON.
 
         Returns:
-            flask.Response: A Flask response containing the list of movies in JSON format.
-        
+            flask.Response: A Flask response with a JSON object containing the movie data.
+            The status_code is 200 for a successful response.
+
         Raises:
-            UploadFile: If the requested file is not found in Google Cloud Storage.
+            UploadFile: When the request does not contain valid movie data.
         """
-        f_name = config('MOVIES_FILE_NAME')
+        max_records = 30
+
+        f_name = request.args.get('file_name', None)
+        page = request.args.get('page', None)
+
+        if page:
+            start = (int(page) - 1) * max_records
+            end = start + max_records
+
+        
+        if not f_name:
+            f_name = config('MOVIES_FILE_NAME')
+
         glg = GoogleStorage()
         
         _file = glg._get_file(f_name)
-        
+
         if not _file:
             raise UploadFile()
-            
-        df = pd.read_csv(io.StringIO(_file))
-        json_data = df.to_json(orient='records')
         
-        response = jsonify({'status_code': 200, 'data': json.loads(json_data)})
+        df = pd.read_csv(io.StringIO(_file))
+
+        if page:
+            df = df.iloc[start:end]
+            
+        # Convert the DataFrame to a JSON object with 'records' orientation
+        json_data = df.to_json(orient='records')
+
+
+        response = jsonify({'status_code': 200, 'data': json.loads(json_data),
+                            'page': page})
         return response

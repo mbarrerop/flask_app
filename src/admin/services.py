@@ -1,7 +1,6 @@
 # Flask API
 from flask_restful import Resource
 from flask import request, jsonify
-from marshmallow import ValidationError
 
 # Schemas
 from .schemas import UploadMoviesSchema
@@ -13,7 +12,11 @@ from src.core.exceptions import UploadFile, FileNotExist, InvalidFileName
 from src.core.google_api import GoogleStorage
 
 # Utils
-from src.core.utils import val_existing_file
+
+from aiohttp import ClientSession
+import asyncio
+
+
 
 class AdminMoviesList(Resource):
     """
@@ -28,7 +31,7 @@ class AdminMoviesList(Resource):
     Example usage:
         resource = AdminMoviesList()
     """
-
+    
     def post(self):
         """
         Handles the HTTP POST request to save a Netflix titles file to Google Cloud Storage.
@@ -45,26 +48,21 @@ class AdminMoviesList(Resource):
             UploadFile: When there are failures while updating the netflix_titles.csv file in Google Cloud Storage.
         """
         
+        responses = list()
         # Manage the file and events
+        files = request.files.getlist('files')
         upload_file = None
-        if 'file' not in request.files:
+        if not files:
             raise UploadFile()
         
-        file = request.files['file']
-        
-        if file.filename == '':
-            raise InvalidFileName()
-        
-        if file:
-            file_data = file.read()
-        
-        # Sending to Google Storage
         glg = GoogleStorage()
-        upload_file = glg._upload_files(file.filename, file_data)
-        
-        if not upload_file:
-            raise UploadFile()
-            
-        response = jsonify({'status_code': 200, 'uploaded': upload_file})
+
+        for file in files:
+            # Sending to Google Storage
+            file_data = file.read()
+            upload_file = glg._upload_files(file.filename, file_data)
+            responses.append(upload_file)
+                
+        response = jsonify({'status_code': 200, 'result': responses})
         return response
 

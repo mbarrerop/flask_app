@@ -2,7 +2,7 @@
 from google.cloud import storage
 from decouple import config, Csv
 from typing import Optional
-
+import asyncio
 
 class GoogleAPI:
     """
@@ -99,7 +99,7 @@ class GoogleStorage(GoogleAPI):
         self.__bucket_loc = config('BUCKET_LOCATION')
         self.__current_bucket = None
 
-    def _upload_files(self, blob_name: str, file_data: any) -> bool:
+    def _upload_files(self, blob_name: str, file_data: any) -> dict:
         """
         Uploads a file to the Google Cloud Storage bucket.
 
@@ -108,16 +108,17 @@ class GoogleStorage(GoogleAPI):
             file_data (any): The content of the file to be uploaded.
 
         Returns:
-            bool: True if the file was successfully uploaded, False if an error occurred.
+            dict: True if the file was successfully uploaded, False if an error occurred.
         """
         try:
             self.__validate_bucket()
             blob_name = blob_name.replace(' ', '_')
             blob = self.__current_bucket.blob(blob_name)
             blob.upload_from_string(file_data)
-            return True
+            return {'file_name': blob_name, 'uploaded': True}
+
         except Exception as e:
-            return False
+            return {'file_name': blob_name, 'uploaded': False}
 
     def _get_file(self, blob_name: str) -> Optional[str]:
         """
