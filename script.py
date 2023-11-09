@@ -32,8 +32,8 @@ def get_data_file(url, save=False, save_path=None):
             json.dump(response.json(), archivo_json, indent=4)
         print(f'File saved in: {file_route}')
     else:
-        pass
-        #print(response.json())
+        
+        print(response.json())
      
 if args.url_save and args.file_paths:
     send_files(args.url_save, args.file_paths)
