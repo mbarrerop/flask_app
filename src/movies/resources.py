@@ -1,8 +1,8 @@
 from flask import Blueprint, request, Response
 from flask_restful import Api
+from src.movies.services import MoviesList
 
 
-from app.movies.services import MoviesList
 blueprint = Blueprint('movies', __name__, url_prefix='/movies')
 
 api = Api(blueprint)

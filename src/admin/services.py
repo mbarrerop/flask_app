@@ -4,16 +4,16 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 
 # Schemas
-from app.admin.schemas import UploadMoviesSchema
+from .schemas import UploadMoviesSchema
 
 # Exceptions
-from app.core.exceptions import UploadFile, FileNotExist, InvalidFileName
+from src.core.exceptions import UploadFile, FileNotExist, InvalidFileName
 
 # External services
-from app.core.google_api import GoogleStorage
+from src.core.google_api import GoogleStorage
 
 # Utils
-from app.core.utils import val_existing_file
+from src.core.utils import val_existing_file
 
 class AdminMoviesList(Resource):
     """

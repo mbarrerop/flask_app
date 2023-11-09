@@ -1,13 +1,13 @@
-from app.admin.resources import blueprint as bp_admin
-from app.movies.resources import blueprint as bp_movies
-from app.core.exceptions import ObjectNotFound, AppErrorBaseClass, FileNotExist
+
 from flask import Flask, jsonify
-from decouple import config
+
 
 def create_app():
     
-    app = Flask(__name__)
+    from src.admin.resources import blueprint as bp_admin
+    from src.movies.resources import blueprint as bp_movies
     
+    app = Flask(__name__)
     app.url_map.strict_slashes = False
     
     app.register_blueprint(bp_admin)
@@ -19,6 +19,7 @@ def create_app():
 
 def register_error_handlers(app):
     
+    from src.core.exceptions import ObjectNotFound, AppErrorBaseClass, FileNotExist
     @app.errorhandler(Exception)
     def handle_exception_error(e):
         if isinstance (e, dict): 
