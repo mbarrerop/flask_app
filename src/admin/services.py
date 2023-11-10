@@ -15,9 +15,6 @@ from src.core.google_api import GoogleStorage
 
 # Utils
 
-from aiohttp import ClientSession
-import asyncio
-
 ns = Namespace(name='',description='Netflix API')
 @ns.route('/admin/save-movies')
 class AdminMoviesList(Resource):
