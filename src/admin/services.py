@@ -1,6 +1,5 @@
 # Flask API
 from flask_restx import Namespace, fields
-from config.extensions import fx_api
 from flask_restful import Resource
 from flask import request, jsonify
 
