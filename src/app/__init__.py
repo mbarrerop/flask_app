@@ -1,6 +1,6 @@
 
 from flask import Flask, jsonify
-from config.extensions import fx_api
+from src.config.extensions import fx_api
 
 def create_app():
     from src.admin.services import ns as admin
