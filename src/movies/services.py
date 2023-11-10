@@ -1,5 +1,6 @@
 
 # Flask API
+from flask_restx import Namespace, fields
 from flask_restful import Resource
 from flask import request, jsonify
 
@@ -15,6 +16,8 @@ import pandas as pd
 import json
 import io
 
+ns = Namespace(name='',description='Netflix API')
+@ns.route('/movies/list')
 class MoviesList(Resource):
     """
     A class representing a RESTful resource for retrieving a list of movies.

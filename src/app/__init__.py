@@ -1,22 +1,24 @@
 
 from flask import Flask, jsonify
-
+from config.extensions import fx_api
 
 def create_app():
-    
+    from src.admin.services import ns as admin
+    from src.movies.services import ns as movies
     from src.admin.resources import blueprint as bp_admin
     from src.movies.resources import blueprint as bp_movies
-    from src.core.resources import blueprint as bp_hc
     
     app = Flask(__name__)
+
     app.url_map.strict_slashes = False
     
     app.register_blueprint(bp_admin)
     app.register_blueprint(bp_movies)
-    app.register_blueprint(bp_hc)
     
     register_error_handlers(app)
-    
+    fx_api.init_app(app)
+    fx_api.add_namespace(admin)
+    fx_api.add_namespace(movies)
     return app
 
 def register_error_handlers(app):

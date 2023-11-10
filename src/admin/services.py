@@ -1,4 +1,6 @@
 # Flask API
+from flask_restx import Namespace, fields
+from config.extensions import fx_api
 from flask_restful import Resource
 from flask import request, jsonify
 
@@ -16,8 +18,8 @@ from src.core.google_api import GoogleStorage
 from aiohttp import ClientSession
 import asyncio
 
-
-
+ns = Namespace(name='',description='Netflix API')
+@ns.route('/admin/save-movies')
 class AdminMoviesList(Resource):
     """
     A class representing a RESTful resource for managing movie files.
@@ -31,7 +33,7 @@ class AdminMoviesList(Resource):
     Example usage:
         resource = AdminMoviesList()
     """
-    
+
     def post(self):
         """
         Handles the HTTP POST request to save a Netflix titles file to Google Cloud Storage.
